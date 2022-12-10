@@ -1,44 +1,42 @@
-const plugin = require('tailwindcss/plugin');
+/* eslint-disable @typescript-eslint/no-var-requires */
+
+const plugin = require("tailwindcss/plugin");
 
 module.exports = plugin(function ({ addComponents, config }) {
   const { theme } = config();
   const colors = theme?.colors ?? {};
 
-  const modifiers = ['bg', 'text', 'ring', 'fill', 'border', 'divide'];
+  const modifiers = [
+    "bg",
+    "text",
+    "ring",
+    "fill",
+    "border",
+    "divide",
+    "outline",
+    "accent",
+  ];
 
-  const reducer = (object, prefix) => (acc, curr) => {
-    const value = object[curr];
+  const reducer = (acc, curr) => {
+    const value = colors[curr];
     if (
-      ['light', 'dark'].every(colorMode =>
+      ["light", "dark"].every((colorMode) =>
         Object.keys(value).includes(colorMode)
       )
     ) {
-      modifiers.forEach(modifier => {
+      modifiers.forEach((modifier) => {
         acc[`.${modifier}-${curr}`] = {
-          [`@apply ${modifier}-${
-            prefix ? `${prefix}-` : ''
-          }${curr}-light dark:${modifier}-${
-            prefix ? `${prefix}-` : ''
-          }${curr}-dark`]: {},
+          [`@apply ${modifier}-${curr}-light dark:${modifier}-${curr}-dark`]: {},
         };
         acc[`.${modifier}-${curr}-inverse`] = {
-          [`@apply ${modifier}-${
-            prefix ? `${prefix}-` : ''
-          }${curr}-dark dark:${modifier}-${
-            prefix ? `${prefix}-` : ''
-          }${curr}-light`]: {},
+          [`@apply ${modifier}-${curr}-dark dark:${modifier}-${curr}-light`]: {},
         };
       });
-      delete value['light'];
-      delete value['dark'];
-    }
-    if (Object.keys(value).some(key => isNaN(+key))) {
-      return Object.keys(value).reduce(reducer(value, curr), acc);
     }
     return acc;
   };
 
-  const result = Object.keys(colors).reduce(reducer(colors), {});
+  const result = Object.keys(colors).reduce(reducer, {});
 
   addComponents(result);
 });
