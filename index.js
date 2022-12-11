@@ -15,6 +15,7 @@ module.exports = plugin(function ({ addComponents, config }) {
     "divide",
     "outline",
     "accent",
+    "shadow",
   ];
 
   const reducer = (acc, curr) => {
@@ -26,10 +27,12 @@ module.exports = plugin(function ({ addComponents, config }) {
     ) {
       modifiers.forEach((modifier) => {
         acc[`.${modifier}-${curr}`] = {
-          [`@apply ${modifier}-${curr}-light dark:${modifier}-${curr}-dark`]: {},
+          [`@apply ${modifier}-${curr}-light dark:${modifier}-${curr}-dark`]:
+            {},
         };
         acc[`.${modifier}-${curr}-inverse`] = {
-          [`@apply ${modifier}-${curr}-dark dark:${modifier}-${curr}-light`]: {},
+          [`@apply ${modifier}-${curr}-dark dark:${modifier}-${curr}-light`]:
+            {},
         };
       });
     }
